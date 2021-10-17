@@ -4,4 +4,5 @@ artifacts:
   img_pickle_file_name: img_PICKLE_file.pkl
   feature_extraction_dir: extracted_features
   extracted_features_name: embedding.pkl
+  upload_image_dir: uploads
 

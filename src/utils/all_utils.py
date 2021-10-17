@@ -18,7 +18,7 @@ def create_directory(dirs: list):
 
 
 def data_download(name_of_image,limits):
-    downloader.download(name_of_image, limit=limits,  output_dir='dataset', adult_filter_off=True, force_replace=False, timeout=60, verbose=True)
+    downloader.download(name_of_image, limit=limits,  output_dir='new_dataset', adult_filter_off=True, force_replace=False, timeout=60, verbose=True)
     logging.info("Data has been downloaded.")
 
 

@@ -139,4 +139,4 @@ config/secrets.yaml
 /data
 artifacts/extracted_features/embedding.pkl
 artifacts/pickle_format_data/img_PICKLE_file.pkl
-/dataset
+/new_dataset

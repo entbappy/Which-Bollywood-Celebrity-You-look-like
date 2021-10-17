@@ -6,6 +6,7 @@ Date:12-Oct-2021
 
 from keras_vggface.utils import preprocess_input
 from keras_vggface.vggface import VGGFace
+from src.utils.all_utils import read_yaml, create_directory
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
@@ -16,19 +17,58 @@ from mtcnn import MTCNN
 import numpy as np
 
 
-detector = MTCNN()
-model = VGGFace(model='resnet50',include_top=False,input_shape=(224,224,3),pooling='avg')
-feature_list = pickle.load(open('artifacts/extracted_features/embedding.pkl','rb'))
-filenames = pickle.load(open('artifacts/pickle_format_data/img_PICKLE_file.pkl','rb'))
 
+config = read_yaml('config/config.yaml')
+params = read_yaml('params.yaml')
+
+artifacts = config['artifacts']
+artifacts_dir = artifacts['artifacts_dir']
+
+#upload
+upload_image_dir = artifacts['upload_image_dir']
+uploadn_path = os.path.join(artifacts_dir, upload_image_dir)
+
+# pickle_format_data_dir
+pickle_format_data_dir = artifacts['pickle_format_data_dir']
+img_pickle_file_name = artifacts['img_pickle_file_name']
+
+raw_local_dir_path = os.path.join(artifacts_dir, pickle_format_data_dir)
+pickle_file = os.path.join(raw_local_dir_path, img_pickle_file_name)
+
+#Feature path
+feature_extraction_dir = artifacts['feature_extraction_dir']
+extracted_features_name = artifacts['extracted_features_name']
+
+feature_extraction_path = os.path.join(artifacts_dir, feature_extraction_dir)
+features_name = os.path.join(feature_extraction_path, extracted_features_name)
+
+
+#params_path
+model_name = params['base']['BASE_MODEL']
+include_tops = params['base']['include_top']
+input_shapes = params['base']['input_shape']
+poolings = params['base']['pooling']
+
+
+
+detector = MTCNN()
+model = VGGFace(model=model_name,include_top=include_tops,input_shape=(224,224,3),pooling=poolings)
+feature_list = pickle.load(open(features_name,'rb'))
+filenames = pickle.load(open(pickle_file,'rb'))
+
+# save_uploaded_image
 def save_uploaded_image(uploaded_image):
     try:
-        with open(os.path.join('uploads',uploaded_image.name),'wb') as f:
+        create_directory(dirs=[uploadn_path])
+
+        with open(os.path.join(uploadn_path,uploaded_image.name),'wb') as f:
             f.write(uploaded_image.getbuffer())
         return True
     except:
         return False
 
+
+# extract_features
 def extract_features(img_path,model,detector):
     img = cv2.imread(img_path)
     results = detector.detect_faces(img)
@@ -50,6 +90,8 @@ def extract_features(img_path,model,detector):
     result = model.predict(preprocessed_img).flatten()
     return result
 
+
+# recommend image
 def recommend(feature_list,features):
     similarity = []
     for i in range(len(feature_list)):
@@ -58,6 +100,8 @@ def recommend(feature_list,features):
     index_pos = sorted(list(enumerate(similarity)), reverse=True, key=lambda x: x[1])[0][0]
     return index_pos
 
+
+# streamlit
 st.title('Which Bollywood Celebrity You look like?')
 
 uploaded_image = st.file_uploader('Choose an image')
@@ -69,12 +113,12 @@ if uploaded_image is not None:
         display_image = Image.open(uploaded_image)
 
         # extract the features
-        features = extract_features(os.path.join('uploads',uploaded_image.name),model,detector)
+        features = extract_features(os.path.join(uploadn_path,uploaded_image.name),model,detector)
         # recommend
         index_pos = recommend(feature_list,features)
         predicted_actor = " ".join(filenames[index_pos].split('\\')[1].split('_'))
         # display
-        col1,col2 = st.beta_columns(2)
+        col1,col2 = st.columns(2)
 
         with col1:
             st.header('Your uploaded image')
