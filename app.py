@@ -1,4 +1,9 @@
-#!pip install streamlit
+'''
+Author: Bappy Ahmed
+Email: entbappy73@gmail.com
+Date:12-Oct-2021
+'''
+
 from keras_vggface.utils import preprocess_input
 from keras_vggface.vggface import VGGFace
 import pickle
@@ -10,10 +15,11 @@ import cv2
 from mtcnn import MTCNN
 import numpy as np
 
+
 detector = MTCNN()
 model = VGGFace(model='resnet50',include_top=False,input_shape=(224,224,3),pooling='avg')
-feature_list = pickle.load(open('embedding.pkl','rb'))
-filenames = pickle.load(open('filenames.pkl','rb'))
+feature_list = pickle.load(open('artifacts/extracted_features/embedding.pkl','rb'))
+filenames = pickle.load(open('artifacts/pickle_format_data/img_PICKLE_file.pkl','rb'))
 
 def save_uploaded_image(uploaded_image):
     try:
@@ -52,7 +58,7 @@ def recommend(feature_list,features):
     index_pos = sorted(list(enumerate(similarity)), reverse=True, key=lambda x: x[1])[0][0]
     return index_pos
 
-st.title('Which bollywood celebrity are you?')
+st.title('Which Bollywood Celebrity You look like?')
 
 uploaded_image = st.file_uploader('Choose an image')
 
