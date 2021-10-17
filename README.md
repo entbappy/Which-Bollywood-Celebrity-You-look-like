@@ -88,4 +88,11 @@ streamlit run app.py
 
 yes!! Now you can start predicting 🙂
 
+# Authors:
+```bash
+Author: Bappy Ahmed
+Data Scientist
+Email: entbappy73@gmail.com
+```
+
 
