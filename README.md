@@ -32,7 +32,7 @@ This really performing good you can consider by seeing this result 😀
 
 The fun part is I am looked like Riteish Deshmukh 😄😁
 
-<img src="demo/4.png" alt="workflow" width="70%">
+<img src="demo/5.png" alt="workflow" width="70%">
 
 # STEPS:
 
