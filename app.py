@@ -102,7 +102,8 @@ def recommend(feature_list,features):
 
 
 # streamlit
-st.title('Which Bollywood Celebrity You look like?')
+#st.title('Which Bollywood Celebrity You look like?')
+st.title('To whom does your face match?')
 
 uploaded_image = st.file_uploader('Choose an image')
 
